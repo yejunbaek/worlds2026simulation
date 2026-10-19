@@ -17,7 +17,8 @@ header{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content
   border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:24px}
 h1{margin:0;font-size:26px;letter-spacing:.5px}
 h1 span{color:var(--accent)}
-.sub{color:var(--muted);margin-top:6px;max-width:640px}
+.sub{color:var(--muted);margin-top:6px;max-width:700px}
+.sub b{color:var(--text);font-weight:600}
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .progress{color:var(--muted);font-size:13px;margin-right:6px}
 .btn{background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:6px;
@@ -26,22 +27,33 @@ h1 span{color:var(--accent)}
 .btn.danger:hover{border-color:var(--lose);color:#fca5a5}
 h2{font-size:15px;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin:34px 0 14px}
 .scroll{overflow-x:auto;padding-bottom:10px}
-.swiss{display:flex;gap:22px;min-width:max-content}
-.col{width:232px;display:flex;flex-direction:column;gap:18px}
+.swiss{display:flex;gap:22px;min-width:max-content;align-items:flex-start}
+.col{width:244px;display:flex;flex-direction:column;gap:18px}
 .pool{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.pool.editing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 .pool-h{display:flex;justify-content:space-between;align-items:center;background:#d9dbe0;color:#111;
   font-weight:800;font-size:11px;padding:6px 10px;text-transform:uppercase;letter-spacing:.3px}
 .pool-h small{font-weight:600;color:#555;margin-left:6px}
 .sq{width:9px;height:9px;display:inline-block;margin-left:3px;background:#a3a8b0}
 .sq.g{background:var(--win)}.sq.r{background:var(--lose)}
-.tag{font-size:10px;color:var(--muted);padding:6px 10px 0;text-transform:uppercase;letter-spacing:.5px}
+.tools{display:flex;align-items:center;gap:4px;padding:6px 6px 0 10px}
+.tag{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-right:auto}
+.tag .custom{color:var(--accent);margin-left:4px}
+.tb{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:5px;
+  font:inherit;font-size:11px;font-weight:600;padding:2px 7px;cursor:pointer;line-height:1.5}
+.tb:hover{color:var(--text);border-color:var(--accent)}
+.tb.on{background:var(--accent);color:#111;border-color:var(--accent)}
+.hint{font-size:11px;color:var(--accent);padding:6px 10px 0}
 .match{margin:6px;border-radius:6px;background:var(--card);overflow:hidden;border:1px solid var(--line)}
+.rm{font-size:9px;font-weight:800;color:#fbbf24;text-transform:uppercase;letter-spacing:.5px;padding:3px 10px 0}
 .team{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;background:none;border:0;
   color:inherit;font:inherit;font-weight:600;text-align:left;cursor:pointer;transition:background .12s}
 .team+.team{border-top:1px solid var(--line)}
 .team:hover:not(:disabled){background:var(--card2)}
 .team.win{background:rgba(34,197,94,.13)}
 .team.lose{opacity:.42}
+.team.sel{background:rgba(200,170,110,.22);box-shadow:inset 3px 0 0 var(--accent)}
+.editing .team.lose{opacity:1}
 .team:disabled{cursor:default;color:var(--muted);font-weight:500}
 .res{margin-left:auto;font-weight:800;font-size:12px}
 .team.win .res{color:var(--win)}.team.lose .res{color:var(--lose)}
@@ -57,10 +69,9 @@ h2{font-size:15px;text-transform:uppercase;letter-spacing:1.5px;color:var(--acce
 .row{display:flex;align-items:center;gap:9px;padding:5px 12px}
 .row .rec{margin-left:auto;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
 .empty-note{color:var(--muted);padding:6px 12px 10px;font-size:13px}
-.bracket{display:grid;grid-template-columns:repeat(4,240px);gap:28px;min-width:max-content}
+.bracket{display:grid;grid-template-columns:repeat(4,244px);gap:28px;min-width:max-content}
 .stage{display:flex;flex-direction:column;justify-content:space-around;gap:14px}
-.stage-h{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);
-  margin-bottom:-6px}
+.stage-h{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
 .seed{font-size:10px;color:var(--muted);font-weight:700;width:16px;flex:none}
 .champ{border:1px solid var(--accent);border-radius:10px;padding:22px 16px;text-align:center;
   background:linear-gradient(180deg,rgba(200,170,110,.15),transparent)}
@@ -77,8 +88,10 @@ footer{color:var(--muted);font-size:12px;margin-top:40px;border-top:1px solid va
   <header>
     <div>
       <h1>WORLDS 2026 <span>Simulator</span></h1>
-      <div class="sub">Click a team to make them win. Click the winner again to undo. Changing an earlier
-        result clears any later picks that depended on it. Everything saves automatically in this browser.</div>
+      <div class="sub">Click a team to make them win, and click again to undo.
+        Each pool has <b>Reroll</b> for a new random draw, <b>Edit</b> to set matchups yourself
+        (click two teams to swap them, e.g. to match the official draw), and <b>Random</b> for random winners.
+        Changing an earlier result clears later picks that depended on it. Everything saves in this browser.</div>
     </div>
     <div class="actions">
       <span class="progress" id="progress"></span>
@@ -96,9 +109,9 @@ footer{color:var(--muted);font-size:12px;margin-top:40px;border-top:1px solid va
   <h2>Knockout Stage</h2>
   <div id="ko"></div>
 
-  <footer>Fan-made simulator, not affiliated with Riot Games. Swiss pairings after Round 1 are generated
-    automatically (same-record teams, no rematches) and knockout seeding is by Swiss record, so they may
-    differ from the official draws.</footer>
+  <footer>Fan-made simulator, not affiliated with Riot Games. Unless you edit them, Swiss pairings after
+    Round 1 are generated automatically (same-record teams, no rematches) and quarterfinal seeding goes by
+    Swiss record.</footer>
 </div>
 
 <script>
@@ -124,31 +137,41 @@ const TEAMS = [
 const R1 = [[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]];
 const STRUCT = {1:["0-0"],2:["1-0","0-1"],3:["2-0","1-1","0-2"],4:["2-1","1-2"],5:["2-2"]};
 const SIZE = {"0-0":8,"1-0":4,"0-1":4,"2-0":2,"1-1":4,"0-2":2,"2-1":3,"1-2":3,"2-2":3};
-const STORE_KEY = "worlds2026-sim-v1";
+const STORE_KEY = "worlds2026-sim-v2";
 
 // ---------- State ----------
-let results = {};
-try { results = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { results = {}; }
-function save(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(results)); } catch (e) {} }
+// results: matchId -> winning team index
+// draws:   poolId  -> flat list of team indices; consecutive pairs are matches (custom/rerolled draws)
+let results = {}, draws = {};
+try {
+  const saved = JSON.parse(localStorage.getItem(STORE_KEY));
+  if (saved) { results = saved.results || {}; draws = saved.draws || {}; }
+  else { results = JSON.parse(localStorage.getItem("worlds2026-sim-v1")) || {}; }
+} catch (e) { results = {}; draws = {}; }
+function save(){ try { localStorage.setItem(STORE_KEY, JSON.stringify({results, draws})); } catch (e) {} }
+
+let editing = null, selected = null; // UI-only edit state
 
 // ---------- Logic ----------
-function pairPool(ids, rec){
-  ids = [...ids].sort((a,b)=>a-b);
-  function bt(list){
-    if (!list.length) return [];
-    const [a, ...rest] = list;
+const toPairs = list => { const o=[]; for (let i=0;i<list.length;i+=2) o.push([list[i], list[i+1]]); return o; };
+
+// Pair teams in the given order, avoiding rematches where possible.
+function pairNoRematch(list, rec){
+  function bt(l){
+    if (!l.length) return [];
+    const [a, ...rest] = l;
     for (let j = rest.length-1; j >= 0; j--){
       const b = rest[j];
-      if (rec[a].opp.has(b)) continue;
+      if (rec && rec[a].opp.has(b)) continue;
       const sub = bt(rest.filter((_,k)=>k!==j));
       if (sub) return [[a,b], ...sub];
     }
     return null;
   }
-  const r = bt(ids);
-  if (r) return r;
-  const out = []; for (let i=0;i<ids.length;i+=2) out.push([ids[i], ids[i+1]]); return out;
+  return bt(list) || toPairs(list);
 }
+
+function shuffle(a){ a=[...a]; for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
 function makeMatch(id, a, b, extra, live){
   if (a == null || b == null) return {id:null, a, b, winner:null, ...extra};
@@ -157,29 +180,43 @@ function makeMatch(id, a, b, extra, live){
   return {id, a, b, winner:w, ...extra};
 }
 
+// Use the saved custom draw for a pool if it still contains exactly these teams.
+function useDraw(poolId, teams, autoPairs, liveDraws){
+  const d = draws[poolId];
+  if (d && d.length === teams.length && teams.every(t=>d.includes(t))) {
+    liveDraws.add(poolId);
+    return {pairs: toPairs(d), custom: true};
+  }
+  return {pairs: autoPairs, custom: false};
+}
+
 function compute(){
-  const rec = TEAMS.map(()=>({w:0,l:0,opp:new Set(),hist:[]}));
-  const live = new Set(), done = {}, rounds = [];
+  const rec = TEAMS.map(()=>({w:0,l:0,opp:new Set()}));
+  const live = new Set(), liveDraws = new Set(), done = {}, rounds = [];
 
   for (let r=1; r<=5; r++){
     const pools = [];
     for (const key of STRUCT[r]){
       const [w,l] = key.split("-").map(Number);
+      const id = `S${r}|${key}`;
       let ready = r === 1;
       if (r > 1){
         const srcs = [`${w-1}-${l}`, `${w}-${l-1}`].filter(k=>STRUCT[r-1].includes(k));
         ready = srcs.every(k=>done[`${r-1}:${k}`]);
       }
       const bo = (w===2 || l===2) ? 3 : 1;
-      let matches;
+      let matches, teams = [], custom = false;
       if (ready){
-        const pairs = r === 1 ? R1 : pairPool(
-          TEAMS.map((_,i)=>i).filter(i=>rec[i].w===w && rec[i].l===l && rec[i].w+rec[i].l===r-1), rec);
-        matches = pairs.map(([a,b])=>makeMatch(`S${r}|${key}|${a}|${b}`, a, b, {bo}, live));
+        teams = r === 1 ? TEAMS.map((_,i)=>i)
+          : TEAMS.map((_,i)=>i).filter(i=>rec[i].w===w && rec[i].l===l && rec[i].w+rec[i].l===r-1);
+        const auto = r === 1 ? R1 : pairNoRematch(teams, rec);
+        const d = useDraw(id, teams, auto, liveDraws); custom = d.custom;
+        matches = d.pairs.map(([a,b])=>makeMatch(`S${r}|${key}|${a}|${b}`, a, b,
+          {bo, rematch: rec[a].opp.has(b)}, live));
       } else {
         matches = Array.from({length:SIZE[key]}, ()=>({id:null,a:null,b:null,winner:null,bo}));
       }
-      pools.push({r, key, w, l, ready, matches});
+      pools.push({id, r, key, w, l, ready, teams, custom, matches});
     }
     for (const p of pools){
       let d = p.ready;
@@ -188,7 +225,6 @@ function compute(){
         const lo = m.winner === m.a ? m.b : m.a;
         rec[m.winner].w++; rec[lo].l++;
         rec[m.a].opp.add(m.b); rec[m.b].opp.add(m.a);
-        rec[m.winner].hist.push("W"); rec[lo].hist.push("L");
       }
       p.done = d; done[`${r}:${p.key}`] = d;
     }
@@ -203,26 +239,33 @@ function compute(){
   const alive = TEAMS.map((_,i)=>i).filter(i=>rec[i].w<3 && rec[i].l<3)
     .sort((a,b)=>(rec[b].w-rec[b].l)-(rec[a].w-rec[a].l) || a-b);
 
-  // Knockout: 1v8, 4v5 | 2v7, 3v6
+  // Knockout. Default: 1v8, 4v5 | 2v7, 3v6 — editable like a Swiss pool.
   const swissDone = qualified.length === 8;
   const S = swissDone ? qualified : [];
   const seedOf = {}; S.forEach((t,i)=>seedOf[t]=i+1);
-  const QP = [[0,7],[3,4],[1,6],[2,5]];
-  const qf = QP.map(([x,y],i)=>makeMatch(`QF${i}|${S[x]}|${S[y]}`, S[x], S[y], {bo:5}, live));
+  const qfPool = {id:"QF", ready: swissDone, teams: S, custom:false};
+  let qfPairs = [[0,7],[3,4],[1,6],[2,5]].map(([x,y])=>[S[x], S[y]]);
+  if (swissDone){ const d = useDraw("QF", S, qfPairs, liveDraws); qfPairs = d.pairs; qfPool.custom = d.custom; }
+  const qf = qfPairs.map(([a,b],i)=>makeMatch(`QF${i}|${a}|${b}`, a, b, {bo:5}, live));
+  qfPool.matches = qf;
   const sf = [0,1].map(i=>makeMatch(`SF${i}|${qf[i*2].winner}|${qf[i*2+1].winner}`,
                  qf[i*2].winner, qf[i*2+1].winner, {bo:5}, live));
   const fin = makeMatch(`F|${sf[0].winner}|${sf[1].winner}`, sf[0].winner, sf[1].winner, {bo:5}, live);
 
-  return {rec, rounds, qualified, eliminated, alive, swissDone, seedOf, qf, sf, fin, champ:fin.winner, live};
+  return {rec, rounds, qualified, eliminated, alive, swissDone, seedOf, qfPool, qf, sf, fin,
+          champ:fin.winner, live, liveDraws};
 }
 
 function allMatches(s){
   return [...s.rounds.flatMap(p=>p.flatMap(x=>x.matches)), ...s.qf, ...s.sf, s.fin];
 }
+function allPools(s){ return [...s.rounds.flat(), s.qfPool]; }
+function findPool(s, id){ return allPools(s).find(p=>p.id===id); }
 
 function prune(s){
   let changed = false;
   for (const k of Object.keys(results)) if (!s.live.has(k)) { delete results[k]; changed = true; }
+  for (const k of Object.keys(draws)) if (!s.liveDraws.has(k)) { delete draws[k]; changed = true; }
   if (changed) save();
 }
 
@@ -235,22 +278,78 @@ function fillRandom(){
   save();
 }
 
+// New random draw for one pool (avoids rematches in the Swiss).
+function rerollPool(id){
+  const s = compute(), p = findPool(s, id);
+  if (!p || !p.ready) return;
+  const rec = id === "QF" ? null : (() => {
+    // records/opponents from before this round: rebuild from matches in earlier rounds
+    const r = p.r, opp = TEAMS.map(()=>({opp:new Set()}));
+    s.rounds.slice(0, r-1).flat().forEach(q=>q.matches.forEach(m=>{
+      if (m.a!=null && m.b!=null){ opp[m.a].opp.add(m.b); opp[m.b].opp.add(m.a); }
+    }));
+    return opp;
+  })();
+  const current = p.matches.map(m=>`${m.a}|${m.b}`).join(",");
+  let pairs;
+  for (let tries=0; tries<20; tries++){
+    pairs = pairNoRematch(shuffle(p.teams), rec);
+    if (pairs.map(([a,b])=>`${a}|${b}`).join(",") !== current || p.teams.length <= 2) break;
+  }
+  draws[id] = pairs.flat();
+  save();
+}
+
+function randomWinners(id){
+  const p = findPool(compute(), id);
+  if (!p) return;
+  for (const m of p.matches) if (m.id) results[m.id] = Math.random() < .5 ? m.a : m.b;
+  save();
+}
+
+function swapTeams(id, t1, t2){
+  const p = findPool(compute(), id);
+  if (!p || t1 === t2) return;
+  const flat = p.matches.flatMap(m=>[m.a, m.b]);
+  const i = flat.indexOf(t1), j = flat.indexOf(t2);
+  if (i < 0 || j < 0 || Math.floor(i/2) === Math.floor(j/2)) return; // same match: nothing to change
+  [flat[i], flat[j]] = [flat[j], flat[i]];
+  draws[id] = flat;
+  save();
+}
+
 // ---------- Render ----------
 const badge = i => i==null ? `<span class="badge empty"></span>`
   : `<span class="badge" style="--c:${TEAMS[i][2]}">${TEAMS[i][1]}</span>`;
 
-function teamBtn(m, t, seed){
+function teamBtn(m, t, seed, poolId){
   const seedHtml = seed ? `<span class="seed">${seed}</span>` : "";
   if (t == null) return `<button class="team" disabled>${seedHtml}${badge(null)}<span class="name">TBD</span></button>`;
-  const cls = m.winner==null ? "" : (m.winner===t ? "win" : "lose");
+  const isEdit = poolId && editing === poolId;
+  let cls = m.winner==null ? "" : (m.winner===t ? "win" : "lose");
+  if (isEdit && selected === t) cls += " sel";
   const res = m.winner==null ? "" : (m.winner===t ? "W" : "L");
   const ready = m.a!=null && m.b!=null;
-  return `<button class="team ${cls}" ${ready?"":"disabled"} data-id="${m.id}" data-team="${t}" title="${ready?"Click to pick winner":""}">
+  return `<button class="team ${cls}" ${ready?"":"disabled"} data-id="${m.id}" data-team="${t}" data-pool="${poolId||""}"
+    title="${isEdit ? "Click two teams to swap them" : ready ? "Click to pick winner" : ""}">
     ${seedHtml}${badge(t)}<span class="name">${TEAMS[t][0]}</span><span class="res">${res}</span></button>`;
 }
 
-function matchHtml(m, seeds){
-  return `<div class="match">${teamBtn(m, m.a, seeds && m.a!=null ? seeds[m.a] : "")}${teamBtn(m, m.b, seeds && m.b!=null ? seeds[m.b] : "")}</div>`;
+function matchHtml(m, seeds, poolId){
+  const s = t => seeds && t!=null ? seeds[t] : "";
+  return `<div class="match">${m.rematch ? `<div class="rm">Rematch</div>` : ""}${teamBtn(m, m.a, s(m.a), poolId)}${teamBtn(m, m.b, s(m.b), poolId)}</div>`;
+}
+
+function toolsHtml(p, label){
+  const custom = p.custom ? `<span class="custom">· custom draw</span>` : "";
+  if (!p.ready) return `<div class="tools"><span class="tag">${label}</span></div>`;
+  const ed = editing === p.id;
+  return `<div class="tools"><span class="tag">${label}${custom}</span>
+    <button class="tb" data-act="reroll" data-pool="${p.id}" title="New random draw">Reroll</button>
+    <button class="tb ${ed?"on":""}" data-act="edit" data-pool="${p.id}" title="Set matchups by swapping teams">${ed?"Done":"Edit"}</button>
+    <button class="tb" data-act="random" data-pool="${p.id}" title="Random winners for this pool">Random</button>
+    ${p.custom ? `<button class="tb" data-act="auto" data-pool="${p.id}" title="Back to the default draw">Auto</button>` : ""}
+  </div>${ed ? `<div class="hint">Click two teams to swap them between matches.</div>` : ""}`;
 }
 
 function squares(w,l){
@@ -259,40 +358,45 @@ function squares(w,l){
 
 function poolLabel(p){
   if (p.w===2 && p.l===2) return "Decider · Bo3";
-  if (p.w===2) return "Advancement · Bo3";
-  if (p.l===2) return "Elimination · Bo3";
+  if (p.w===2) return "Advance · Bo3";
+  if (p.l===2) return "Elim · Bo3";
   return "Bo1";
 }
 
 function render(){
   const s = compute();
   prune(s);
+  if (editing && !(findPool(s, editing)||{}).ready) { editing = null; selected = null; }
 
   document.getElementById("swiss").innerHTML = s.rounds.map((pools,ri)=>
     `<div class="col">${pools.map(p=>`
-      <div class="pool">
+      <div class="pool ${editing===p.id?"editing":""}">
         <div class="pool-h"><span>Round ${ri+1}<small>${p.w}–${p.l}</small></span><span>${squares(p.w,p.l)}</span></div>
-        <div class="tag">${poolLabel(p)}</div>
-        ${p.matches.map(m=>matchHtml(m)).join("")}
+        ${toolsHtml(p, poolLabel(p))}
+        ${p.matches.map(m=>matchHtml(m, null, p.id)).join("")}
       </div>`).join("")}</div>`).join("");
 
-  const row = (i, extra="") => `<div class="row">${extra}${badge(i)}<span class="name">${TEAMS[i][0]}</span>
+  const row = i => `<div class="row">${badge(i)}<span class="name">${TEAMS[i][0]}</span>
     <span class="rec">${s.rec[i].w}–${s.rec[i].l}</span></div>`;
   document.getElementById("standings").innerHTML = `
     <div class="list"><h3 class="q">Qualified (${s.qualified.length}/8)</h3>
-      ${s.qualified.length ? s.qualified.map(i=>row(i)).join("") : `<div class="empty-note">No teams yet</div>`}</div>
+      ${s.qualified.length ? s.qualified.map(row).join("") : `<div class="empty-note">No teams yet</div>`}</div>
     <div class="list"><h3 class="p">Still in Swiss (${s.alive.length})</h3>
-      ${s.alive.length ? s.alive.map(i=>row(i)).join("") : `<div class="empty-note">Swiss stage complete</div>`}</div>
+      ${s.alive.length ? s.alive.map(row).join("") : `<div class="empty-note">Swiss stage complete</div>`}</div>
     <div class="list"><h3 class="e">Eliminated (${s.eliminated.length}/8)</h3>
-      ${s.eliminated.length ? s.eliminated.map(i=>row(i)).join("") : `<div class="empty-note">No teams yet</div>`}</div>`;
+      ${s.eliminated.length ? s.eliminated.map(row).join("") : `<div class="empty-note">No teams yet</div>`}</div>`;
 
   const champ = s.champ!=null
     ? `<div class="champ"><div class="t">World Champion</div>${badge(s.champ)}<div class="n">${TEAMS[s.champ][0]}</div></div>`
     : `<div class="champ"><div class="t">World Champion</div><div class="n" style="color:var(--muted)">TBD</div></div>`;
+  const qp = s.qfPool;
   document.getElementById("ko").innerHTML =
-    (s.swissDone ? "" : `<div class="locked">The bracket unlocks once all 8 teams have qualified from the Swiss stage. Seeds go by Swiss record (3–0 first), then strength of schedule.</div>`) +
+    (s.swissDone ? "" : `<div class="locked">The bracket unlocks once all 8 teams have qualified from the Swiss stage. The default draw seeds by Swiss record (3–0 first); use Edit to set the official draw.</div>`) +
     `<div class="scroll"><div class="bracket">
-      <div class="stage"><div class="stage-h">Quarterfinals · Bo5</div>${s.qf.map(m=>matchHtml(m, s.seedOf)).join("")}</div>
+      <div class="stage"><div class="pool ${editing==="QF"?"editing":""}" style="background:none;border-color:transparent">
+        <div class="stage-h" style="padding:0 0 0 10px">Quarterfinals · Bo5</div>
+        ${toolsHtml(qp, "Draw")}
+        ${s.qf.map(m=>matchHtml(m, s.seedOf, "QF")).join("")}</div></div>
       <div class="stage"><div class="stage-h">Semifinals · Bo5</div>${s.sf.map(m=>matchHtml(m, s.seedOf)).join("")}</div>
       <div class="stage"><div class="stage-h">Final · Bo5</div>${matchHtml(s.fin, s.seedOf)}</div>
       <div class="stage">${champ}</div>
@@ -304,15 +408,30 @@ function render(){
 
 if (typeof document !== "undefined"){
   document.addEventListener("click", e=>{
+    const tool = e.target.closest("button.tb[data-act]");
+    if (tool){
+      const id = tool.dataset.pool, act = tool.dataset.act;
+      if (act === "reroll") rerollPool(id);
+      else if (act === "random") randomWinners(id);
+      else if (act === "auto") { delete draws[id]; save(); }
+      else if (act === "edit") { editing = editing === id ? null : id; selected = null; }
+      render(); return;
+    }
     const b = e.target.closest("button.team[data-id]");
     if (!b || b.disabled) return;
-    const id = b.dataset.id, t = Number(b.dataset.team);
+    const id = b.dataset.id, t = Number(b.dataset.team), pool = b.dataset.pool;
+    if (pool && editing === pool){
+      if (selected == null) selected = t;
+      else if (selected === t) selected = null;
+      else { swapTeams(pool, selected, t); selected = null; }
+      render(); return;
+    }
     if (results[id] === t) delete results[id]; else results[id] = t;
     save(); render();
   });
   document.getElementById("fill").onclick = ()=>{ fillRandom(); render(); };
   document.getElementById("reset").onclick = ()=>{
-    if (confirm("Clear all picks?")) { results = {}; save(); render(); }
+    if (confirm("Clear all picks and custom draws?")) { results = {}; draws = {}; editing = null; save(); render(); }
   };
   render();
 }
